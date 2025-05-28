@@ -14,9 +14,8 @@ import json
 
 from collections import Counter
 
-from weasyprint import HTML
-
 from openpyxl.workbook import Workbook
+from weasyprint import HTML
 
 from core.forms import RegistroForm, PacienteForm, ProcedimentoForm, AgendamentoForm, UserEditForm
 from core.models import Paciente, Procedimento, Agendamento
@@ -333,8 +332,8 @@ def relatorio_faturamento_pdf(request):
     if not inicio or not fim:
         return HttpResponse("É necessário informar o período.", status=400)
 
-    inicio_data = datetime.strptime(inicio, '%d/%m/%Y')
-    fim_data = datetime.strptime(fim, '%d/%m/%Y')
+    inicio_data = datetime.strptime(inicio, '%Y-%m-%d')
+    fim_data = datetime.strptime(fim, '%Y-%m-%d')
 
     agendamentos = Agendamento.objects.filter(
         user=request.user,
