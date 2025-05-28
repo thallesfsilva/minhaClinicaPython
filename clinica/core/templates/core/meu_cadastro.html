@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block title %}Meu Cadastro{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Meu Cadastro</h2>
+
+  <div class="row">
+    <!-- Formulário de dados -->
+    <div class="col-md-6">
+      <form method="post" class="card p-3 mb-4 shadow-sm">
+        {% csrf_token %}
+        <h5 class="mb-3">Editar Dados</h5>
+        {{ form.as_p }}
+        <button type="submit" name="dados_submit" class="btn btn-primary">Salvar Alterações</button>
+      </form>
+    </div>
+
+    <!-- Formulário de senha -->
+    <div class="col-md-6">
+      <form method="post" class="card p-3 mb-4 shadow-sm">
+        {% csrf_token %}
+        <h5 class="mb-3">Alterar Senha</h5>
+        {{ senha_form.as_p }}
+        <button type="submit" name="senha_submit" class="btn btn-warning">Alterar Senha</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mensagens -->
+  {% if messages %}
+    <div class="mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
