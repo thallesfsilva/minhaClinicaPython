@@ -24,12 +24,14 @@ class PacienteForm(forms.ModelForm):
 
 class ProcedimentoForm(forms.ModelForm):
     nome = forms.CharField(required=True)
-    preco = forms.DecimalField(required=True)
-    data_criacao = forms.DateField(required=True)
 
     class Meta:
         model = Procedimento
-        fields = ('nome', 'descricao', 'preco', 'data_criacao')
+        fields = ('nome', 'descricao', 'preco')
+        labels = {
+            'descricao': 'Descrição',
+            'preco': 'Preço'
+        }
 
 class AgendamentoForm(forms.ModelForm):
     data_agendamento = forms.DateTimeField(

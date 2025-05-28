@@ -12,6 +12,10 @@
         value="{{ query|default:'' }}">
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
+    <div class="alert alert-warning" role="alert">
+        <strong>Aviso:</strong> O valor de faturamento é baseado apenas nos agendamentos com status <strong>"Pago"</strong>.
+    </div>
+
     <table class="table table-striped table-bordered" style="margin-top: 10px">
         <tr>
             <th>Paciente</th>
