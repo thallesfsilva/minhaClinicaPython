@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cadastrar Paciente{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Cadastrar Paciente</h2>
+<form method="post" class="card p-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+</form>
+<a href="{% url 'listar_pacientes' %}" class="btn btn-link mt-2">Voltar</a>
+{% endblock %}

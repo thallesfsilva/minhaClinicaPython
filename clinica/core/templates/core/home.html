@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Dashboard</h2>
+
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-white bg-success">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-currency-dollar me-2"></i>Faturamento Total</h5>
+            <p class="card-text fs-4">R$ {{ faturamento_total }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-white bg-primary">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>Total de Pacientes</h5>
+            <p class="card-text fs-4">{{ total_pacientes }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-white bg-warning">
+          <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-calendar-event-fill me-2"></i>Agendamentos Futuros</h5>
+            <p class="card-text fs-4">{{ total_agendamentos_futuros }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- Relatório de Faturamento -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Exportar Relatório de Faturamento (PDF)</h5>
+        <form method="get" action="{% url 'relatorio_faturamento_pdf' %}" class="row g-2 align-items-end">
+          <div class="col-md-5">
+            <label for="inicio" class="form-label">Data Início</label>
+            <input type="date" id="inicio" name="inicio" class="form-control" required>
+          </div>
+          <div class="col-md-5">
+            <label for="fim" class="form-label">Data Fim</label>
+            <input type="date" id="fim" name="fim" class="form-control" required>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-danger w-100">Exportar PDF</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+  {% if proximo_agendamento %}
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-primary"><i class="bi bi-clock me-2"></i>Próximo Agendamento</h5>
+            <p class="mb-1"><strong>{{ proximo_agendamento.paciente }}</strong> - {{ proximo_agendamento.procedimento }}</p>
+            <p class="text-muted">{{ proximo_agendamento.data_agendamento|date:"d/m/Y H:i" }}</p>
+        </div>
+      </div>
+  {% else %}
+    <div class="alert alert-secondary">Nenhum agendamento futuro encontrado.</div>
+  {% endif %}
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title text-info"><i class="bi bi-bar-chart-line-fill me-2"></i>Procedimentos Mais Agendados</h5>
+        <canvas id="graficoProcedimentos" height="150"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('graficoProcedimentos').getContext('2d');
+  const grafico = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ procedimentos_labels|safe }},
+      datasets: [{
+        label: 'Quantidade de Agendamentos',
+        data: {{ procedimentos_data|safe }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

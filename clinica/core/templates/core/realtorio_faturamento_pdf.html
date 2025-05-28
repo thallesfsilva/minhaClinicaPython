@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>Relatório de Faturamento</h2>
+    <p>Período: {{ inicio|date:"d/m/Y" }} até {{ fim|date:"d/m/Y" }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Paciente</th>
+                <th>Procedimento</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ag in agendamentos %}
+            <tr>
+                <td>{{ ag.data_agendamento|date:"d/m/Y H:i" }}</td>
+                <td>{{ ag.paciente }}</td>
+                <td>{{ ag.procedimento.nome }}</td>
+                <td>R$ {{ ag.procedimento.preco }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3>Total Faturado: R$ {{ total }}</h3>
+</body>
+</html>
