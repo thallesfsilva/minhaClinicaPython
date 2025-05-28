@@ -2,24 +2,15 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Segurança
+SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default-key-para-dev')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2^v2v8^cczjgoe-xbjjpqlr7fc5-aj3h4k8baahlyt30p*cw#r'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ['clinicconnect.app.br']
-
-
-# Application definition
-
+# Aplicativos
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,8 +21,10 @@ INSTALLED_APPS = [
     'core',
 ]
 
+# Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Precisa estar aqui, logo após o SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -40,11 +33,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Whitenoise
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-
+# URLs e WSGI
 ROOT_URLCONF = 'clinica.urls'
+WSGI_APPLICATION = 'clinica.wsgi.application'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,72 +53,43 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'clinica.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# Banco de dados com fallback para SQLite em dev
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# Internacionalização
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Arquivos estáticos
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Login e redirecionamentos
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'listar_agendamentos'
 LOGOUT_REDIRECT_URL = 'login'
 
-# Produção segura
+# Segurança para produção
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Database config para produção
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Tipo padrão de chave primária
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
