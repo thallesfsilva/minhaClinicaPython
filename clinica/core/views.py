@@ -63,7 +63,7 @@ def login_usuario(request):
         if user is not None:
             login(request, user)
             print("Login bem-sucedido, redirecionando para home...")
-            return redirect('listar_agendamentos')
+            return redirect('home')
         else:
             messages.error(request, 'Usuário ou senha inválidos!')
     return render(request, 'core/login.html')
