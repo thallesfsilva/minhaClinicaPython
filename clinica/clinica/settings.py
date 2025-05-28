@@ -2,15 +2,14 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Segurança
-SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default-key-para-dev')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+SECRET_KEY = os.environ.get("SECRET_KEY", "chave-insegura-para-dev")
 
-# Aplicativos
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = ['clinicconnect.app.br', 'your-render-subdomain.onrender.com']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,10 +20,9 @@ INSTALLED_APPS = [
     'core',
 ]
 
-# Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Precisa estar aqui, logo após o SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← aqui
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -33,11 +31,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URLs e WSGI
 ROOT_URLCONF = 'clinica.urls'
-WSGI_APPLICATION = 'clinica.wsgi.application'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -53,16 +48,16 @@ TEMPLATES = [
     },
 ]
 
-# Banco de dados com fallback para SQLite em dev
+WSGI_APPLICATION = 'clinica.wsgi.application'
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
         conn_max_age=600,
         ssl_require=True
     )
 }
 
-# Validação de senha
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -70,26 +65,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internacionalização
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Arquivos estáticos
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Login e redirecionamentos
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'listar_agendamentos'
 LOGOUT_REDIRECT_URL = 'login'
 
-# Segurança para produção
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
-# Tipo padrão de chave primária
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
