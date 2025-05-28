@@ -57,7 +57,7 @@ def login_usuario(request):
         username = request.POST.get('username')
         senha = request.POST.get('senha')
 
-        print(f'username: {username}, senha: {senha}')
+        print(f'login username: {username}')
 
         user = authenticate(request, username=username, password=senha)
         if user is not None:
