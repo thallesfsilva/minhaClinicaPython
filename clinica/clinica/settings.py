@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "chave-insegura-para-dev")
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['clinicconnect.app.br', 'your-render-subdomain.onrender.com']
+ALLOWED_HOSTS = ['clinicconnect.app.br', 'minhaclinicapython.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
