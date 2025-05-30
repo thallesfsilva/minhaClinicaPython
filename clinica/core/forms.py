@@ -14,7 +14,7 @@ class RegistroForm(UserCreationForm):
 
 class PacienteForm(forms.ModelForm):
     nome = forms.CharField(required=True)
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=False)
     telefone = forms.CharField(required=True)
     data_nascimento = forms.DateField(required=True)
 
